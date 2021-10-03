@@ -24,14 +24,14 @@ def lemm(l):
   return lemmas
 
 
-def pos(l):
+def pos(l, d):
   pos = 0
   for w in l:
     if w in d and d[w] > 0.5:
       pos += 1
   return pos
 
-def neg(l):
+def neg(l, d):
   neg = 0
   for w in l:
     if w in d and d[w] < 0.5:
@@ -46,11 +46,11 @@ def first_second_pro(l):
               "yours"]
   return sum([list((map(lambda x: x.lower(),l))).count(j) for j in pronouns])
 
-def get_features(df):
+def get_features(df, d):
   split_df = df['val'].str.split("[ .,\"]")
   df['containsNO'] = split_df.apply(contains_no)
   df['containsExclamation'] = df['val'].apply(lambda x: 1 if "!" in x  else 0)
   df['count_pronouns'] = split_df.apply(first_second_pro)
   df["logNOfWords"] = np.log(df["val"].str.count(" "))
-  df["pos_count"] = split_df.apply(pos)
-  df["neg_count"] = split_df.apply(neg)
+  df["pos_count"] = split_df.apply(pos, args=(d,))
+  df["neg_count"] = split_df.apply(neg, args=(d,))
