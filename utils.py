@@ -78,3 +78,5 @@ def get_features(df: pd.DataFrame, d: Dict[str, float]):
   df["logNOfWords"] = np.log(df["val"].str.count(" "))
   df["pos_count"] = split_df.apply(pos, args=(d,))
   df["neg_count"] = split_df.apply(neg, args=(d,))
+  difference = df["pos_count"] - df["neg_count"]
+  df["isposgreater"] = difference.apply(lambda x: 1 if x > 0 else 0)
